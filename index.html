@@ -96,36 +96,18 @@
             animation: orbFloat 20s ease-in-out infinite;
         }
         .bg-animated .orb:nth-child(1) {
-            width: 500px;
-            height: 500px;
-            background: var(--accent);
-            top: -10%;
-            left: -5%;
-            animation-delay: 0s;
+            width: 500px; height: 500px; background: var(--accent); top: -10%; left: -5%;
         }
         .bg-animated .orb:nth-child(2) {
-            width: 400px;
-            height: 400px;
-            background: #2563eb;
-            bottom: -10%;
-            right: -5%;
-            animation-delay: -7s;
+            width: 400px; height: 400px; background: #2563eb; bottom: -10%; right: -5%; animation-delay: -7s;
         }
         .bg-animated .orb:nth-child(3) {
-            width: 350px;
-            height: 350px;
-            background: #8b5cf6;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -14s;
+            width: 350px; height: 350px; background: #8b5cf6; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -14s;
         }
 
         @keyframes orbFloat {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(60px, -40px) scale(1.1); }
-            50% { transform: translate(-30px, 60px) scale(0.95); }
-            75% { transform: translate(40px, 30px) scale(1.05); }
+            50% { transform: translate(40px, -30px) scale(1.05); }
         }
 
         /* ===== SCREENS ===== */
@@ -136,12 +118,12 @@
         }
         .screen.active, .tool-screen.active {
             display: flex;
-            animation: fadeSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(16px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -201,9 +183,7 @@
             text-align: center;
             margin-bottom: 2px;
         }
-        .login-logo span {
-            color: var(--accent);
-        }
+        .login-logo span { color: var(--accent); }
         .login-sub {
             color: var(--text-light);
             margin: 0 0 32px;
@@ -216,9 +196,7 @@
             flex-direction: column;
             gap: 14px;
         }
-        .login-form input {
-            width: 100%;
-        }
+        .login-form input { width: 100%; }
         .login-form .name-row {
             display: flex;
             gap: 10px;
@@ -227,12 +205,9 @@
             flex: 1;
             animation: slideUp 0.5s ease both;
         }
-        .login-form .name-row input:first-child {
-            animation-delay: 0.1s;
-        }
-        .login-form .name-row input:last-child {
-            animation-delay: 0.2s;
-        }
+        .login-form .name-row input:first-child { animation-delay: 0.1s; }
+        .login-form .name-row input:last-child { animation-delay: 0.2s; }
+
         .btn-primary {
             background: linear-gradient(135deg, var(--accent), #d4942e);
             color: #0f1b2d;
@@ -240,17 +215,10 @@
             border-radius: var(--radius-sm);
             font-weight: 700;
             font-size: 1rem;
-            letter-spacing: 0.3px;
             box-shadow: 0 4px 20px var(--accent-glow);
             transition: var(--transition);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 30px var(--accent-glow);
-        }
-        .btn-primary:active {
-            transform: scale(0.97);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 30px var(--accent-glow); }
 
         .saved-users {
             margin-top: 28px;
@@ -266,19 +234,13 @@
             letter-spacing: 1px;
             font-weight: 600;
         }
-        .saved-users-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-        }
+        .saved-users-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
         .saved-user-btn {
             background: rgba(255, 255, 255, 0.06);
             color: var(--text-light);
             padding: 8px 18px;
             border-radius: 20px;
             font-size: 0.82rem;
-            font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -286,25 +248,8 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             transition: var(--transition);
         }
-        .saved-user-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: var(--accent);
-            color: #fff;
-            transform: translateY(-1px);
-        }
-        .saved-user-btn .remove-btn {
-            color: var(--text-muted);
-            font-weight: 700;
-            background: none;
-            font-size: 0.75rem;
-            cursor: pointer;
-            padding: 0 2px;
-            line-height: 1;
-            transition: var(--transition);
-        }
-        .saved-user-btn .remove-btn:hover {
-            color: #ef4444;
-        }
+        .saved-user-btn:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--accent); color: #fff; }
+        .saved-user-btn .remove-btn { color: var(--text-muted); background: none; font-size: 0.75rem; cursor: pointer; }
 
         /* ===== PASSWORD MODAL ===== */
         .modal-overlay {
@@ -313,18 +258,12 @@
             inset: 0;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             align-items: center;
             justify-content: center;
             z-index: 999;
             padding: 20px;
         }
-        .modal-overlay.show {
-            display: flex;
-        }
-        .modal-overlay.show .modal-box {
-            animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .modal-overlay.show { display: flex; }
         .modal-box {
             background: var(--bg-alt);
             border: 1px solid var(--card-border);
@@ -335,217 +274,60 @@
             text-align: center;
             box-shadow: var(--shadow);
         }
-        .modal-box h3 {
-            margin-bottom: 6px;
-            font-size: 1.3rem;
-        }
-        .modal-box p {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 22px;
-        }
-        .modal-box input {
-            width: 100%;
-            margin-bottom: 14px;
-        }
-        .modal-error {
-            color: #ef4444;
-            font-size: 0.85rem;
-            margin-top: 8px;
-            display: none;
-            animation: slideUp 0.3s ease;
-        }
+        .modal-box h3 { margin-bottom: 6px; font-size: 1.3rem; }
+        .modal-box p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 22px; }
+        .modal-box input { width: 100%; margin-bottom: 14px; }
+        .modal-error { color: #ef4444; font-size: 0.85rem; margin-top: 8px; display: none; }
 
         /* ===== DASHBOARD ===== */
-        #dashboardScreen {
-            flex-direction: column;
-            background: var(--bg);
-        }
+        #dashboardScreen { flex-direction: column; background: var(--bg); }
         .topbar {
             background: rgba(15, 27, 45, 0.85);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding: 16px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .topbar-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #fff;
-        }
-        .topbar-logo span {
-            color: var(--accent);
-        }
-        .topbar-user {
-            font-size: 0.88rem;
-            color: var(--text-light);
-            padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .topbar-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .btn-logout {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--text-light);
-            padding: 8px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .btn-logout:hover {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-        }
-        .main-content {
-            flex: 1;
-            padding: 40px 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            animation: fadeSlideIn 0.5s ease;
-        }
-        .main-content h1 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 4px;
-            background: linear-gradient(135deg, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .main-content .subtitle {
-            color: var(--text-light);
-            margin-bottom: 36px;
-            font-size: 0.95rem;
-        }
+        .topbar-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: #fff; }
+        .topbar-logo span { color: var(--accent); }
+        .topbar-user { font-size: 0.88rem; color: var(--text-light); padding: 6px 14px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; }
+        .btn-logout { background: rgba(255, 255, 255, 0.06); color: var(--text-light); padding: 8px 20px; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
 
-        /* ===== TOOL CARDS GRID ===== */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
+        .main-content { flex: 1; padding: 40px 32px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .main-content h1 { font-size: 2rem; font-weight: 800; margin-bottom: 4px; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .main-content .subtitle { color: var(--text-light); margin-bottom: 36px; font-size: 0.95rem; }
+
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .tool-card {
             background: var(--card);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
             padding: 28px 24px 24px;
             box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
             text-align: center;
             position: relative;
             overflow: hidden;
-        }
-        .tool-card::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: var(--radius);
-            padding: 1px;
-            background: conic-gradient(from 0deg, transparent, var(--accent-glow), transparent, var(--accent-glow), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.6s ease;
-            animation: rotate 4s linear infinite;
-        }
-        @keyframes rotate {
-            to { transform: rotate(360deg); }
-        }
-        .tool-card:hover::before {
-            opacity: 1;
-        }
-        .tool-card > * {
-            position: relative;
-            z-index: 1;
-        }
-        .tool-card:hover {
-            transform: translateY(-6px) scale(1.02);
-            border-color: var(--accent);
-            box-shadow: var(--shadow), 0 0 50px var(--accent-glow);
-            background: var(--card-hover);
-        }
-        .tool-card .icon {
-            font-size: 2.6rem;
-            margin-bottom: 14px;
-            display: inline-block;
-            animation: float 4s ease-in-out infinite;
-            position: relative;
-            z-index: 1;
-        }
-        .tool-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: #fff;
-            position: relative;
-            z-index: 1;
-        }
-        .tool-card p {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            position: relative;
-            z-index: 1;
-        }
-        .tool-card .badge {
-            display: inline-block;
-            margin-top: 14px;
-            background: linear-gradient(135deg, var(--accent), #d4942e);
-            color: #0f1b2d;
-            font-size: 0.68rem;
-            padding: 4px 14px;
-            border-radius: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 1;
             transition: var(--transition);
         }
-        .tool-card:hover .badge {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
+        .tool-card:hover { transform: translateY(-6px) scale(1.02); border-color: var(--accent); box-shadow: var(--shadow), 0 0 50px var(--accent-glow); background: var(--card-hover); }
+        .tool-card .icon { font-size: 2.6rem; margin-bottom: 14px; display: inline-block; animation: float 4s ease-in-out infinite; }
+        .tool-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
+        .tool-card p { font-size: 0.85rem; color: var(--text-light); }
+        .tool-card .badge { display: inline-block; margin-top: 14px; background: linear-gradient(135deg, var(--accent), #d4942e); color: #0f1b2d; font-size: 0.68rem; padding: 4px 14px; border-radius: 12px; font-weight: 700; text-transform: uppercase; }
 
         /* ===== TOOL SCREENS ===== */
-        .tool-screen {
-            display: none;
-            flex-direction: column;
-            min-height: 100vh;
-            background: var(--bg);
-        }
-        .tool-screen.active {
-            display: flex;
-        }
+        .tool-screen { flex-direction: column; min-height: 100vh; background: var(--bg); }
         .tool-header {
             background: rgba(15, 27, 45, 0.85);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding: 14px 32px;
             display: flex;
@@ -555,39 +337,11 @@
             top: 0;
             z-index: 100;
         }
-        .tool-header .back-btn {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--text-light);
-            padding: 8px 18px;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: var(--transition);
-        }
-        .tool-header .back-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
-            transform: translateX(-2px);
-        }
-        .tool-header h2 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        .tool-body {
-            flex: 1;
-            padding: 24px 32px;
-            max-width: 1500px;
-            margin: 0 auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
+        .tool-header .back-btn { background: rgba(255, 255, 255, 0.06); color: var(--text-light); padding: 8px 18px; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .tool-header h2 { font-size: 1.2rem; font-weight: 700; color: #fff; }
+        .tool-body { flex: 1; padding: 24px 32px; max-width: 1500px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
 
-        /* ================================================================
-           ADOBE SMARTBOARD PDF READER (PRO UI/UX WITH THUMBNAILS)
-        ================================================================ */
+        /* ===== ADOBE SMARTBOARD PDF READER ===== */
         .adobe-workspace {
             display: flex;
             height: calc(100vh - 110px);
@@ -641,13 +395,7 @@
         .thumb-item canvas { width: 100% !important; height: auto !important; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
         .thumb-label { font-size: 0.7rem; color: var(--text-light); margin-top: 4px; font-weight: 600; }
 
-        .adobe-main-pane {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #121822;
-            overflow: hidden;
-        }
+        .adobe-main-pane { flex: 1; display: flex; flex-direction: column; background: #121822; overflow: hidden; }
         .adobe-toolbar {
             background: #1a2332;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -675,48 +423,87 @@
         .adobe-smart-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); transform: translateY(-1px); }
         .adobe-smart-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
         .adobe-page-input {
-            width: 60px;
-            height: 44px;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #fff;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 700;
+            width: 60px; height: 44px; text-align: center; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; font-size: 1rem; font-weight: 700;
         }
         .adobe-page-total { color: var(--text-light); font-size: 0.95rem; font-weight: 500; margin-left: 4px; }
         .adobe-file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; }
-        .adobe-file-upload-wrapper input[type="file"] {
-            position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-        }
+        .adobe-file-upload-wrapper input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         .adobe-viewer-canvas-wrap {
-            flex: 1;
-            background: #0a0e14;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: auto;
-            padding: 40px;
-            position: relative;
+            flex: 1; background: #0a0e14; display: flex; justify-content: center; align-items: center; overflow: auto; padding: 40px; position: relative;
         }
-        .adobe-canvas-shadow {
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
-            border-radius: 6px;
-            background: #fff;
-            max-width: 100%;
-        }
-        .adobe-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: var(--text-muted);
-            text-align: center;
-            padding: 40px;
-        }
+        .adobe-canvas-shadow { box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7); border-radius: 6px; background: #fff; max-width: 100%; }
+        .adobe-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; padding: 40px; }
         .adobe-placeholder .big-icon { font-size: 5rem; margin-bottom: 20px; opacity: 0.4; }
+
+        /* ===== BLOX FRUITS–STYLE RANDOM NAME PICKER ===== */
+        .name-picker-area { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .name-picker-area textarea { width: 100%; max-width: 500px; min-height: 120px; padding: 16px; color: #fff; }
+
+        .roll-machine {
+            width: 100%; max-width: 500px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f23 100%);
+            border: 2px solid var(--accent); border-radius: 20px;
+            padding: 24px 20px 20px;
+            box-shadow: 0 0 40px var(--accent-glow), inset 0 0 30px rgba(240, 184, 65, 0.05);
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .roll-machine::before {
+            content: ''; position: absolute; inset: -2px; border-radius: 21px;
+            background: conic-gradient(from 0deg, var(--accent), #d4942e, #f0b841, #8b6914, var(--accent));
+            z-index: -1; animation: rotate 3s linear infinite; opacity: 0.4;
+        }
+        @keyframes rotate { to { transform: rotate(360deg); } }
+
+        .roll-machine .roll-label {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); font-weight: 600; margin-bottom: 12px;
+        }
+        .roll-viewport {
+            background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(240, 184, 65, 0.2);
+            border-radius: 14px; padding: 6px; margin-bottom: 10px; position: relative; overflow: hidden; min-height: 100px;
+        }
+        .roll-viewport .roll-glow {
+            position: absolute; inset: 0; background: linear-gradient(180deg, rgba(240, 184, 65, 0.08) 0%, transparent 30%, transparent 70%, rgba(240, 184, 65, 0.08) 100%); pointer-events: none; z-index: 2;
+        }
+        .roll-slot { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .roll-slot .roll-name {
+            font-size: 2.8rem; font-weight: 800; color: #fff; text-shadow: 0 0 20px rgba(240, 184, 65, 0.3); padding: 12px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+        }
+        .roll-slot .roll-name.rolling { color: var(--accent); text-shadow: 0 0 30px var(--accent-glow); }
+        .roll-slot .roll-name.landed {
+            animation: rollReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; color: var(--accent); text-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(240, 184, 65, 0.2);
+        }
+        @keyframes rollReveal {
+            0% { transform: scale(1.5); opacity: 0; filter: blur(4px); }
+            60% { transform: scale(0.95); opacity: 1; filter: blur(0); }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; filter: blur(0); }
+        }
+
+        .roll-stats { display: flex; gap: 20px; justify-content: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; }
+        .roll-stats strong { color: var(--text-light); }
+
+        .spin-btn {
+            background: linear-gradient(135deg, var(--accent), #d4942e); color: #0f1b2d;
+            padding: 16px 48px; border-radius: 14px; font-weight: 800; font-size: 1.15rem;
+            letter-spacing: 0.5px; align-self: center; box-shadow: 0 4px 24px var(--accent-glow); transition: var(--transition);
+        }
+        .spin-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 40px var(--accent-glow); }
+        .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+        .pick-history {
+            width: 100%; max-width: 500px; background: var(--card); border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm); padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-height: 48px;
+        }
+        .pick-history .history-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; margin-right: 6px; }
+        .pick-history .history-chip { background: rgba(240, 184, 65, 0.12); color: var(--accent); padding: 4px 12px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; animation: slideUp 0.3s ease; }
+
+        .sparkle-container { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+        .sparkle { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: sparkleBurst 0.8s ease-out forwards; }
+        @keyframes sparkleBurst {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx, 60px), var(--ty, -60px)) scale(0); opacity: 0; }
+        }
 
         /* ===== OTHER TOOLS STYLES ===== */
         .draw-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 18px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px 22px; }
@@ -725,12 +512,6 @@
         .notepad-area { width: 100%; min-height: 360px; padding: 20px; border-radius: var(--radius); border: 1.5px solid var(--card-border); background: rgba(255,255,255,0.03); font-size: 1rem; color: #fff; resize: vertical; }
         .timer-display { font-size: 6rem; font-weight: 800; text-align: center; color: #fff; font-variant-numeric: tabular-nums; margin: 30px 0 20px; text-shadow: 0 0 40px var(--accent-glow); }
         .timer-controls, .timer-presets { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-        .name-picker-area { display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .name-picker-area textarea { width: 100%; max-width: 500px; min-height: 100px; padding: 16px; color: #fff; }
-        .roll-machine { width: 100%; max-width: 500px; background: linear-gradient(180deg, #1a1a2e, #0f0f23); border: 2px solid var(--accent); border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 0 40px var(--accent-glow); }
-        .roll-viewport { background: rgba(0,0,0,0.4); border: 2px solid rgba(240,184,65,0.2); border-radius: 14px; padding: 10px; min-height: 90px; display: flex; align-items: center; justify-content: center; }
-        .roll-name { font-size: 2.6rem; font-weight: 800; color: var(--accent); }
-        .spin-btn { background: linear-gradient(135deg, var(--accent), #d4942e); color: #0f1b2d; padding: 16px 48px; border-radius: 14px; font-weight: 800; font-size: 1.15rem; box-shadow: 0 4px 24px var(--accent-glow); cursor: pointer; }
         .grade-calc { max-width: 520px; }
         .grade-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
         .grade-result { font-size: 1.6rem; font-weight: 700; color: var(--accent); text-align: center; margin: 20px 0; padding: 20px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); }
@@ -739,13 +520,6 @@
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .info-card { background: var(--card); border: 1px solid var(--card-border); padding: 24px; border-radius: var(--radius); }
         .info-card h3 { color: var(--accent); margin-bottom: 8px; }
-
-        @media (max-width: 768px) {
-            .adobe-workspace { flex-direction: column; height: calc(100vh - 90px); }
-            .adobe-sidebar { width: 100%; height: 120px; flex-direction: row; overflow-x: auto; }
-            .adobe-thumbnails-list { flex-direction: row; }
-            .thumb-item { width: 70px; flex-shrink: 0; }
-        }
     </style>
 </head>
 <body>
@@ -885,7 +659,7 @@
         </div>
         <div class="tool-body">
             <textarea class="notepad-area" id="notepadArea" placeholder="Write your notes here…"></textarea>
-            <div class="notepad-actions" style="margin-top: 16px; display: flex; gap: 12px;">
+            <div style="margin-top: 16px; display: flex; gap: 12px;">
                 <button class="btn-primary" id="notepadSave">💾 Save Notes</button>
                 <button class="btn-logout" id="notepadClear" style="background:#e74c3c;color:#fff;">Clear</button>
             </div>
@@ -917,7 +691,7 @@
         </div>
     </div>
 
-    <!-- TOOL: RANDOM NAME PICKER -->
+    <!-- TOOL: RANDOM NAME PICKER (BLOX FRUITS ROLLING STYLE) -->
     <div class="tool-screen" id="toolPicker">
         <div class="tool-header">
             <button class="back-btn" data-tool="picker">← Back</button>
@@ -925,15 +699,29 @@
         </div>
         <div class="tool-body">
             <div class="name-picker-area">
-                <textarea id="studentNamesInput" placeholder="Enter student names, one per line:&#10;Ahmed&#10;Mariam&#10;Youssef"></textarea>
+                <textarea id="studentNamesInput" placeholder="Enter student names, one per line:&#10;Ahmed&#10;Mariam&#10;Youssef&#10;…"></textarea>
+
                 <div class="roll-machine">
-                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 8px;">✦ Name Roll ✦</div>
+                    <div class="roll-label">✦ Name Roll ✦</div>
                     <div class="roll-viewport">
-                        <div class="roll-name" id="rollNameDisplay">—</div>
+                        <div class="roll-glow"></div>
+                        <div class="roll-slot">
+                            <div class="roll-name" id="rollNameDisplay">—</div>
+                        </div>
+                        <div class="sparkle-container" id="sparkleContainer"></div>
+                    </div>
+                    <div class="roll-stats">
+                        <span>👥 <strong id="rollStudentCount">0</strong> students</span>
+                        <span>🎯 <strong id="rollTotalPicks">0</strong> picks</span>
                     </div>
                 </div>
+
                 <button class="spin-btn" id="pickNameBtn">🎲 SPIN THE WHEEL!</button>
                 <p class="text-muted text-center" id="pickerStatus">Enter names above and click to roll!</p>
+
+                <div class="pick-history" id="pickHistory">
+                    <span class="history-label">📜 History</span>
+                </div>
             </div>
         </div>
     </div>
@@ -1014,7 +802,7 @@
                 { id: 'draw', icon: '🎨', title: 'Drawing Board', desc: 'Whiteboard sketch tools.' },
                 { id: 'notepad', icon: '📝', title: "Teacher's Notepad", desc: 'Save your lesson notes.' },
                 { id: 'timer', icon: '⏱', title: 'Class Timer', desc: 'Countdown clock for activities.' },
-                { id: 'picker', icon: '🎲', title: 'Name Picker', desc: 'Pick students at random.' },
+                { id: 'picker', icon: '🎲', title: 'Name Picker', desc: 'Blox Fruits rolling name picker.' },
                 { id: 'grades', icon: '📊', title: 'Grade Calculator', desc: 'Calculate averages easily.' },
                 { id: 'attendance', icon: '✅', title: 'Attendance', desc: 'Track classroom presence.' },
                 { id: 'info', icon: '🏫', title: 'School Info', desc: 'Thebes school details.' }
@@ -1174,6 +962,95 @@
                 else document.exitFullscreen?.();
             });
 
+            /* ================= BLOX FRUITS ROLLING PICKER ================= */
+            const studentNamesInput = $('studentNamesInput');
+            const rollNameDisplay = $('rollNameDisplay');
+            const pickNameBtn = $('pickNameBtn');
+            const pickerStatus = $('pickerStatus');
+            const sparkleContainer = $('sparkleContainer');
+            const rollStudentCount = $('rollStudentCount');
+            const rollTotalPicks = $('rollTotalPicks');
+            const pickHistory = $('pickHistory');
+
+            let isRolling = false;
+            let totalPicks = 0;
+            let pickHistoryList = [];
+
+            function createSparkles() {
+                sparkleContainer.innerHTML = '';
+                const colors = ['#f0b841', '#ffd700', '#ff6b6b', '#48dbfb', '#ff9ff3', '#54a0ff'];
+                for (let i = 0; i < 20; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'sparkle';
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = 40 + Math.random() * 100;
+                    spark.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+                    spark.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+                    spark.style.left = (40 + Math.random() * 20) + '%';
+                    spark.style.top = (40 + Math.random() * 20) + '%';
+                    spark.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    spark.style.boxShadow = '0 0 8px ' + spark.style.background;
+                    sparkleContainer.appendChild(spark);
+                }
+                setTimeout(() => sparkleContainer.innerHTML = '', 1200);
+            }
+
+            pickNameBtn.addEventListener('click', () => {
+                if (isRolling) return;
+                const text = studentNamesInput.value.trim();
+                if (!text) { pickerStatus.textContent = '⚠️ Please enter student names first!'; return; }
+                const names = text.split('\n').map(n => n.trim()).filter(Boolean);
+                if (names.length < 2) { pickerStatus.textContent = '⚠️ Add at least 2 students for a proper roll!'; return; }
+
+                isRolling = true;
+                pickNameBtn.disabled = true;
+                pickNameBtn.textContent = '🌀 ROLLING...';
+                pickerStatus.textContent = '🎰 Spinning the wheel...';
+                const chosen = names[Math.floor(Math.random() * names.length)];
+                let tick = 0;
+
+                function cycleNames() {
+                    rollNameDisplay.textContent = names[Math.floor(Math.random() * names.length)];
+                    rollNameDisplay.className = 'roll-name rolling';
+                    tick++;
+                    if (tick < 20) {
+                        setTimeout(cycleNames, 60 + tick * 8);
+                    } else {
+                        rollNameDisplay.textContent = chosen;
+                        rollNameDisplay.className = 'roll-name landed';
+                        createSparkles();
+                        totalPicks++;
+                        rollTotalPicks.textContent = totalPicks;
+                        pickerStatus.textContent = '🎉 **' + chosen + '** was picked!';
+                        pickNameBtn.textContent = '🎲 SPIN THE WHEEL!';
+                        pickHistoryList.unshift(chosen);
+                        if (pickHistoryList.length > 8) pickHistoryList.pop();
+                        renderHistory();
+                        isRolling = false;
+                        pickNameBtn.disabled = false;
+                    }
+                }
+                rollStudentCount.textContent = names.length;
+                cycleNames();
+            });
+
+            function renderHistory() {
+                const label = pickHistory.querySelector('.history-label');
+                pickHistory.innerHTML = '';
+                pickHistory.appendChild(label);
+                pickHistoryList.forEach(name => {
+                    const chip = document.createElement('span');
+                    chip.className = 'history-chip';
+                    chip.textContent = name;
+                    pickHistory.appendChild(chip);
+                });
+            }
+
+            studentNamesInput.addEventListener('input', () => {
+                const text = studentNamesInput.value.trim();
+                rollStudentCount.textContent = text ? text.split('\n').map(n => n.trim()).filter(Boolean).length : '0';
+            });
+
             /* ================= OTHER TOOLS ================= */
             let drawInit = false;
             function initDraw() {
@@ -1214,17 +1091,11 @@
                 timerInt = setInterval(() => {
                     if (timerTarget > 0 && timerSecs <= 0) { clearInterval(timerInt); timerRunning = false; alert('⏰ Time is up!'); return; }
                     timerSecs += (timerTarget > 0 ? -1 : 1);
-                    $('timerDisplay').textContent = fmtTime(timerSecs);                 }, 1000);             });$('timerPause').addEventListener('click', () => { clearInterval(timerInt); timerRunning = false; });
+                    $('timerDisplay').textContent = fmtTime(timerSecs); }, 1000); });$('timerPause').addEventListener('click', () => { clearInterval(timerInt); timerRunning = false; });
             $('timerReset').addEventListener('click', () => { clearInterval(timerInt); timerRunning = false; timerSecs = 0; timerTarget = 0; $('timerDisplay').textContent = '00:00'; });
             document.querySelectorAll('.timer-presets button').forEach(b => b.addEventListener('click', () => {
                 timerSecs = parseInt(b.dataset.minutes) * 60; timerTarget = timerSecs; $('timerDisplay').textContent = fmtTime(timerSecs);
             }));
-
-            $('pickNameBtn').addEventListener('click', () => {
-                const names = $('studentNamesInput').value.split('\n').map(n => n.trim()).filter(Boolean);
-                if (!names.length) { alert('Enter student names first!'); return; }
-                $('rollNameDisplay').textContent = names[Math.floor(Math.random() * names.length)];
-            });
 
             $('addGradeRow').addEventListener('click', () => {
                 const row = document.createElement('div');
