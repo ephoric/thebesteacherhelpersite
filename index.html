@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thebes Language School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
+    </script>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #0f1b2d;
+            --primary-light: #1e3a5f;
+            --primary-glow: #2d6a9f;
+            --accent: #f0b841;
+            --accent-hover: #e0a830;
+            --accent-glow: rgba(240, 184, 65, 0.35);
+            --bg: #0a0f1a;
+            --bg-alt: #111827;
+            --card: rgba(255, 255, 255, 0.06);
+            --card-hover: rgba(255, 255, 255, 0.10);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-border-hover: rgba(255, 255, 255, 0.18);
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --text-muted: #64748b;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 40px rgba(240, 184, 65, 0.08);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { text-decoration: none; color: inherit; }
+        button {
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: inherit;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        input, textarea, select {
+            font-family: inherit;
+            font-size: inherit;
+            border: 1.5px solid rgba(255, 255, 255, 0.10);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            outline: none;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        input::placeholder, textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animated {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bg-animated .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+        .bg-animated .orb:nth-child(1) { width: 500px; height: 500px; background: var(--accent); top: -10%; left: -5%; }
+        .bg-animated .orb:nth-child(2) { width: 400px; height: 400px; background: #2563eb; bottom: -10%; right: -5%; animation-delay: -7s; }
+        .bg-animated .orb:nth-child(3) { width: 350px; height: 350px; background: #8b5cf6; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -14s; }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.05); }
+        }
+
+        /* ===== SCREENS ===== */
+        .screen, .tool-screen {
+            display: none;
+            min-height: 100vh;
+            position: relative;
+        }
+        .screen.active, .tool-screen.active {
+            display: flex;
+            animation: fadeSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        #loginScreen {
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-container {
+            background: var(--card);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 50px 44px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow), var(--shadow-glow);
+        }
+        .login-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        .login-logo span { color: var(--accent); }
+        .login-sub {
+            color: var(--text-light);
+            margin: 0 0 32px;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .login-form { display: flex; flex-direction: column; gap: 14px; }
+        .login-form .name-row { display: flex; gap: 10px; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #d4942e);
+            color: #0f1b2d;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 30px var(--accent-glow); }
+
+        .saved-users {
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--card-border);
+        }
+        .saved-users h4 { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .saved-users-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .saved-user-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-light);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .saved-user-btn:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--accent); color: #fff; }
+        .saved-user-btn .remove-btn { color: var(--text-muted); background: none; font-size: 0.75rem; cursor: pointer; }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: var(--bg-alt);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 36px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        .modal-box h3 { margin-bottom: 6px; font-size: 1.3rem; }
+        .modal-box p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 22px; }
+        .modal-box input { width: 100%; margin-bottom: 14px; }
+        .modal-error { color: #ef4444; font-size: 0.85rem; margin-top: 8px; display: none; }
+
+        /* ===== DASHBOARD ===== */
+        #dashboardScreen { flex-direction: column; }
+        .topbar {
+            background: rgba(15, 27, 45, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topbar-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: #fff; }
+        .topbar-logo span { color: var(--accent); }
+        .topbar-user { font-size: 0.88rem; color: var(--text-light); padding: 6px 14px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; }
+        .btn-logout { background: rgba(255, 255, 255, 0.06); color: var(--text-light); padding: 8px 20px; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+        .main-content { flex: 1; padding: 40px 32px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .main-content h1 { font-size: 2rem; font-weight: 800; margin-bottom: 4px; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .main-content .subtitle { color: var(--text-light); margin-bottom: 36px; font-size: 0.95rem; }
+
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .tool-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 28px 24px 24px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .tool-card:hover { transform: translateY(-6px) scale(1.02); border-color: var(--accent); box-shadow: var(--shadow), 0 0 40px var(--accent-glow); background: var(--card-hover); }
+        .tool-card .icon { font-size: 2.6rem; margin-bottom: 14px; display: inline-block; }
+        .tool-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
+        .tool-card p { font-size: 0.85rem; color: var(--text-light); }
+        .tool-card .badge { display: inline-block; margin-top: 14px; background: linear-gradient(135deg, var(--accent), #d4942e); color: #0f1b2d; font-size: 0.68rem; padding: 4px 14px; border-radius: 12px; font-weight: 700; text-transform: uppercase; }
+
+        /* ===== TOOL SCREENS ===== */
+        .tool-screen { flex-direction: column; min-height: 100vh; background: var(--bg); }
+        .tool-header {
+            background: rgba(15, 27, 45, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .tool-header .back-btn { background: rgba(255, 255, 255, 0.06); color: var(--text-light); padding: 8px 18px; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .tool-header h2 { font-size: 1.2rem; font-weight: 700; color: #fff; }
+        .tool-body { flex: 1; padding: 24px 32px; max-width: 1500px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
+
+        /* ================================================================
+           ADOBE SMARTBOARD PDF READER (PRO UI/UX)
+        ================================================================ */
+        .adobe-workspace {
+            display: flex;
+            height: calc(100vh - 105px);
+            background: #18202c;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Left Thumbnails Sidebar (Collapsible) */
+        .adobe-sidebar {
+            width: 240px;
+            background: #111722;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 5;
+        }
+        .adobe-sidebar.collapsed { width: 0; overflow: hidden; border-right: none; }
+        .adobe-sidebar-header {
+            padding: 14px 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .adobe-thumbnails-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+        .thumb-item {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 6px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .thumb-item:hover { background: rgba(255, 255, 255, 0.08); }
+        .thumb-item.active { border-color: var(--accent); background: rgba(240, 184, 65, 0.08); }
+        .thumb-item canvas { width: 100% !important; height: auto !important; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+        .thumb-label { font-size: 0.7rem; color: var(--text-light); margin-top: 4px; font-weight: 600; }
+
+        /* Main PDF Reader Viewport Area */
+        .adobe-main-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #121822;
+            overflow: hidden;
+        }
+
+        /* Smartboard Top Toolbar (Large touch targets) */
+        .adobe-toolbar {
+            background: #1a2332;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            z-index: 10;
+        }
+        .adobe-toolbar-group { display: flex; align-items: center; gap: 10px; }
+        
+        /* Large Touch-friendly Smartboard Buttons */
+        .adobe-smart-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px; /* Optimal for smartboard touch */
+        }
+        .adobe-smart-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); transform: translateY(-1px); }
+        .adobe-smart-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+        
+        .adobe-page-input {
+            width: 60px;
+            height: 44px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .adobe-page-total { color: var(--text-light); font-size: 0.95rem; font-weight: 500; margin-left: 4px; }
+        
+        .adobe-file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .adobe-file-upload-wrapper input[type="file"] {
+            position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+        }
+
+        /* Canvas Scroll Viewport */
+        .adobe-viewer-canvas-wrap {
+            flex: 1;
+            background: #0a0e14;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            padding: 40px;
+            position: relative;
+        }
+        .adobe-canvas-shadow {
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+            border-radius: 6px;
+            background: #fff;
+            max-width: 100%;
+        }
+        .adobe-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 40px;
+        }
+        .adobe-placeholder .big-icon { font-size: 5rem; margin-bottom: 20px; opacity: 0.4; }
+
+        /* ===== OTHER TOOLS (Draw, Notepad, Timer, Picker, Grades, Attendance, Info) ===== */
+        .draw-controls, .grade-calc, .name-picker-area { /* Standard tool styles kept robust */ }
+        .draw-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 18px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px 22px; }
+        .draw-controls input[type="color"] { border: none; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; background: none; }
+        .draw-controls input[type="range"] { width: 100px; }
+        .draw-canvas-wrap { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); overflow: hidden; }
+        .draw-canvas-wrap canvas { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; cursor: crosshair; touch-action: none; }
+
+        .notepad-area { width: 100%; min-height: 360px; padding: 20px; border-radius: var(--radius); border: 1.5px solid var(--card-border); background: rgba(255,255,255,0.03); font-size: 1rem; color: #fff; resize: vertical; }
+        
+        .timer-display { font-size: 6rem; font-weight: 800; text-align: center; color: #fff; font-variant-numeric: tabular-nums; margin: 30px 0 20px; text-shadow: 0 0 40px var(--accent-glow); }
+        .timer-controls, .timer-presets { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .timer-controls button, .timer-presets button { padding: 12px 28px; border-radius: var(--radius-sm); font-weight: 700; }
+        
+        .name-picker-area { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .name-picker-area textarea { width: 100%; max-width: 500px; min-height: 100px; padding: 16px; color: #fff; }
+        .roll-machine { width: 100%; max-width: 500px; background: linear-gradient(180deg, #1a1a2e, #0f0f23); border: 2px solid var(--accent); border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 0 40px var(--accent-glow); position: relative; }
+        .roll-viewport { background: rgba(0,0,0,0.4); border: 2px solid rgba(240,184,65,0.2); border-radius: 14px; padding: 10px; min-height: 90px; display: flex; align-items: center; justify-content: center; }
+        .roll-name { font-size: 2.6rem; font-weight: 800; color: var(--accent); }
+        .spin-btn { background: linear-gradient(135deg, var(--accent), #d4942e); color: #0f1b2d; padding: 16px 48px; border-radius: 14px; font-weight: 800; font-size: 1.15rem; box-shadow: 0 4px 24px var(--accent-glow); cursor: pointer; }
+
+        .grade-calc { max-width: 520px; }
+        .grade-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+        .grade-result { font-size: 1.6rem; font-weight: 700; color: var(--accent); text-align: center; margin: 20px 0; padding: 20px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); }
+
+        .attendance-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--card-border); padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 8px; }
+        .attendance-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); cursor: pointer; }
+
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .info-card { background: var(--card); border: 1px solid var(--card-border); padding: 24px; border-radius: var(--radius); }
+        .info-card h3 { color: var(--accent); margin-bottom: 8px; }
+
+        @media (max-width: 768px) {
+            .adobe-workspace { flex-direction: column; height: calc(100vh - 90px); }
+            .adobe-sidebar { width: 100%; height: 120px; flex-direction: row; overflow-x: auto; }
+            .adobe-thumbnails-list { flex-direction: row; }
+            .thumb-item { width: 70px; flex-shrink: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animated">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-logo">Thebes<span>.</span></div>
+            <p class="login-sub">Language School — Smartboard Teacher Portal</p>
+            <form id="loginForm" class="login-form" autocomplete="off">
+                <div class="name-row">
+                    <input type="text" id="firstName" placeholder="First Name" required />
+                    <input type="text" id="lastName" placeholder="Last Name" required />
+                </div>
+                <button type="submit" class="btn-primary">Sign In</button>
+            </form>
+            <div class="saved-users" id="savedUsersSection">
+                <h4>Quick Login</h4>
+                <div class="saved-users-list" id="savedUsersList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASSWORD MODAL -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal-box">
+            <h3>🔒 Teacher Verification</h3>
+            <p>Please enter teacher password for account <strong id="modalNameDisplay">TEST</strong></p>
+            <input type="password" id="passwordInput" placeholder="Enter password" />
+            <button class="btn-primary" id="passwordSubmit">Confirm</button>
+            <button class="btn-logout" id="passwordCancel" style="background:#eee;color:#555;margin-top:8px;">Cancel</button>
+            <div class="modal-error" id="passwordError">Incorrect password. Try again.</div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD SCREEN -->
+    <div id="dashboardScreen" class="screen">
+        <div class="topbar">
+            <div class="topbar-left">
+                <div class="topbar-logo">Thebes<span>.</span></div>
+                <div class="topbar-user" id="topbarUser">Welcome, Teacher!</div>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn-logout" id="logoutBtn">Sign Out</button>
+            </div>
+        </div>
+        <div class="main-content">
+            <h1>📚 Teacher Dashboard</h1>
+            <p class="subtitle">Optimized for smartboard teaching & large display rooms.</p>
+            <div class="tools-grid" id="toolsGrid"></div>
+        </div>
+    </div>
+
+    <!-- TOOL: ADOBE SMARTBOARD PDF READER -->
+    <div class="tool-screen" id="toolPdf">
+        <div class="tool-header">
+            <button class="back-btn" data-tool="pdf">← Back to Dashboard</button>
+            <h2>📄 Adobe-Style Smartboard PDF Reader</h2>
+        </div>
+        <div class="tool-body">
+            <div class="adobe-workspace">
+                <!-- Sidebar Thumbnails Pane -->
+                <div class="adobe-sidebar" id="adobeSidebar">
+                    <div class="adobe-sidebar-header">Pages Overview</div>
+                    <div class="adobe-thumbnails-list" id="adobeThumbnailsList">
+                        <p class="text-muted" style="font-size: 0.75rem; text-align: center; padding: 20px;">Upload a PDF to view thumbnails</p>
+                    </div>
+                </div>
+
+                <!-- Main Viewport Pane -->
+                <div class="adobe-main-pane">
+                    <!-- Smartboard Top Toolbar -->
+                    <div class="adobe-toolbar">
+                        <div class="adobe-toolbar-group">
+                            <button class="adobe-smart-btn" id="adobeToggleSidebar" title="Toggle Sidebar">📑 Panes</button>
+                            <div class="adobe-file-upload-wrapper">
+                                <button class="adobe-smart-btn">📂 Open PDF</button>
+                                <input type="file" id="adobePdfUpload" accept=".pdf" />
+                            </div>
+                        </div>
+                        <div class="adobe-toolbar-group">
+                            <button class="adobe-smart-btn" id="adobePrev" disabled>◀ Prev</button>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <input type="number" id="adobePageInput" class="adobe-page-input" value="1" min="1" />
+                                <span class="adobe-page-total" id="adobePageTotal">/ 0</span>
+                            </div>
+                            <button class="adobe-smart-btn" id="adobeNext" disabled>Next ▶</button>
+                        </div>
+                        <div class="adobe-toolbar-group">
+                            <button class="adobe-smart-btn" id="adobeZoomOut" title="Zoom Out">🔍−</button>
+                            <span id="adobeZoomLabel" style="font-size: 0.95rem; font-weight: 700; color: var(--accent); min-width: 55px; text-align: center;">100%</span>
+                            <button class="adobe-smart-btn" id="adobeZoomIn" title="Zoom In">🔍+</button>
+                            <button class="adobe-smart-btn" id="adobeFullscreen" title="Fullscreen Presentation">⛶ Fullscreen</button>
+                        </div>
+                    </div>
+
+                    <!-- PDF Render Body -->
+                    <div class="adobe-viewer-canvas-wrap" id="adobeViewerCanvasWrap">
+                        <div class="adobe-placeholder" id="adobePlaceholder">
+                            <div class="big-icon">📚</div>
+                            <p>No PDF open. Tap <strong>Open PDF</strong> to load a document for the classroom display.</p>
+                        </div>
+                        <canvas id="adobeCanvas" class="adobe-canvas-shadow" style="display:none;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOL: DRAWING BOARD -->
+    <div class="tool-screen" id="toolDraw">
+        <div class="tool-header">
+            <button class="back-btn" data-tool="draw">← Back</button>
+            <h2>🎨 Smartboard Whiteboard & Drawing</h2>
+        </div>
+        <div class="tool-body">
+            <div class="draw-controls">
+                <label>Color</label>
+                <input type="color" id="drawColor" value="#f0b841" />
+                <label>Size</label>
+                <input type="range" id="drawSize" min="2" max="30" value="6" />
+                <span id="drawSizeLabel">6</span>
+                <button class="adobe-smart-btn" id="drawEraser">Eraser</button>
+                <button class="adobe-smart-btn" id="drawClear" style="background: rgba(239, 68, 68, 0.2); color: #efca44;">Clear Canvas</button>
+                <button class="adobe-smart-btn" id="drawSave">💾 Save Drawing</button>
+            </div>
+            <div class="draw-canvas-wrap">
+                <canvas id="drawCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOL: TEACHER NOTEPAD -->
+    <div class="tool-screen" id="toolNotepad">
+        <div class="tool-header">
+            <button class="back-btn" data-tool="notepad">← Back</button>
+            <h2>📝 Teacher's Notepad</h2>
+        </div>
+        <div class="tool-body">
+            <textarea class="notepad-area" id="notepadArea" placeholder="Write lesson plans or notes here…"></textarea>
+            <div style="margin-top: 16px; display: flex; gap: 12px;">
+                <button class="btn-primary" id="notepadSave">💾 Save Notes</button>
+                <button class="btn-logout" id="notepadClear" style="background:#e74c3c;color:#fff;">Clear</button>
+            </div>
+            <p class="text-muted mt-12" id="notepadStatus"></p>
+        </div>
+    </div>
+
+    <!-- TOOL: CLASS TIMER -->
+    <div class="tool-screen" id="toolTimer">
+        <div class="tool-header">
+            <button class="back-btn" data-tool="timer">← Back</button>
+            <h2>⏱ Class Countdown Timer</h2>
+        </div>
+        <div class="tool-body" style="align-items: center; justify-content: center;">
+            <div class="timer-display" id="timerDisplay">00:00</div>
+            <div class="timer-controls">
+                <button class="btn-primary" id="timerStart" style="background: #22c55e; color: #fff;">▶ Start</button>
+                <button class="adobe-smart-btn" id="timerPause">⏸ Pause</button>
+                <button class="adobe-smart-btn" id="timerReset" style="color: #ef4444;">⟳ Reset</button>
+            </div>
+            <div class="timer-presets" style="margin-top: 30px;">
+                <button class="adobe-smart-btn" data-minutes="2">2 min</button>
+                <button class="adobe-smart-btn" data-minutes="5">5 min</button>
+                <button class="adobe-smart-btn" data-minutes="10">10 min</button>
+                <button class="adobe-smart-btn" data-minutes="15">15 min</button>
+                <button class="adobe-smart-btn" data-minutes="30">30 min</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOL: RANDOM NAME PICKER -->
+    <div class="tool-screen" id="toolPicker">
+        <div class="tool-header">
+            <button class="back-btn" data-tool="picker">← Back</button>
+            <h2>🎲 Random Student Picker</h2>
+        </div>
+        <div class="tool-body">
+            <div class="name-picker-area">
+                <textarea id="studentNamesInput" placeholder="Enter student names, one per line:&#10;Ahmed&#10;Mariam&#10;Youssef"></textarea>
+                <div class="roll-machine">
+                    <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 8px;">✦ Selected Student ✦</div>
+                    <div class="roll-viewport">
+                        <div class="roll-name" id="rollNameDisplay">—</div>
+                    </div>
+                </div>
+                <button class="spin-btn" id="pickNameBtn">🎲 PICK RANDOM STUDENT</button>
+                <p class="text-muted text-center" id="pickerStatus">Ready to pick!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOL: GRADE CALCULATOR -->
+    <div class="tool-screen" id="toolGrades">
+        <div class="tool-header">
+            <button class="back-btn" data-tool="grades">← Back</button>
+            <h2>📊 Grade Calculator</h2>
+        </div>
+        <div class="tool-body">
+            <div class="grade-calc">
+                <div id="gradeRows">
+                    <div class="grade-row">
+                        <input type="text" placeholder="Assignment name" class="grade-name" />
+                        <input type="number" placeholder="Score" class="grade-score" min="0" />
+                        <input type="number" placeholder="Out of" class="grade-max" min="1" value="100" />
+                        <button class="adobe-smart-btn" style="background:#e74c3c;color:#fff;" onclick="this.parentElement.remove()">✕</button>
+                    </div>
+                </div>
+                <button class="btn-primary" id="addGradeRow" style="margin-bottom:12px;">+ Add Assignment</button>
+                <div class="grade-result" id="gradeResult">— %</div>
+                <button class="btn-primary" id="calcGrades">Calculate Average</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOL: ATTENDANCE TRACKER -->
+    <div class="tool-screen" id="toolAttendance">
+        <div class="tool-header">
+            <button class="back-btn" data-tool="attendance">← Back</button>
+            <h2>✅ Attendance Tracker</h2>
+        </div>
+        <div class="tool-body" style="max-width: 700px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                <input type="text" id="attendanceNameInput" placeholder="Student name" style="flex:1;" />
+                <button class="btn-primary" id="addAttendanceStudent">Add Student</button>
+            </div>
+            <div id="attendanceList"></div>
+            <div class="text-muted text-center" id="attendanceSummary" style="margin-top: 16px;">Present: 0 / 0</div>
+        </div>
+    </div>
+
+    <!-- TOOL: SCHOOL INFO -->
+    <div class="tool-screen" id="toolInfo">
+        <div class="tool-header">
+            <button class="back-btn" data-tool="info">← Back</button>
+            <h2>🏫 School Information</h2>
+        </div>
+        <div class="tool-body" style="max-width: 900px;">
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>📍 Address</h3>
+                    <p>Thebes Language School<br />Cairo, Egypt</p>
+                </div>
+                <div class="info-card">
+                    <h3>⏰ School Hours</h3>
+                    <p>Sunday – Thursday<br />8:00 AM – 2:00 PM</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+            const TEACHER_PASSWORD = '1234M';
+            const STORAGE_SAVED = 'thebes_saved_users';
+            const STORAGE_CURRENT = 'thebes_current_user';
+
+            const $ = id => document.getElementById(id);
+            let currentUser = null, pendingTest = null;
+            let timerInt = null, timerSecs = 0, timerTarget = 0, timerRunning = false;
+            let isDrawing = false, eraserOn = false;
+
+            const TOOLS = [
+                { id: 'pdf', icon: '📄', title: 'PDF Reader', desc: 'Adobe-style reader for smartboards.' },
+                { id: 'draw', icon: '🎨', title: 'Drawing Board', desc: 'Whiteboard sketch tools.' },
+                { id: 'notepad', icon: '📝', title: "Teacher's Notepad", desc: 'Save your lesson notes.' },
+                { id: 'timer', icon: '⏱', title: 'Class Timer', desc: 'Countdown clock for activities.' },
+                { id: 'picker', icon: '🎲', title: 'Name Picker', desc: 'Pick students at random.' },
+                { id: 'grades', icon: '📊', title: 'Grade Calculator', desc: 'Calculate averages easily.' },
+                { id: 'attendance', icon: '✅', title: 'Attendance', desc: 'Track classroom presence.' },
+                { id: 'info', icon: '🏫', title: 'School Info', desc: 'Thebes school details.' }
+            ];
+
+            function showScreen(id) {
+                document.querySelectorAll('.screen, .tool-screen').forEach(el => el.classList.remove('active'));
+                $(id).classList.add('active');
+            }
+            function showTool(id) {
+                document.querySelectorAll('.screen, .tool-screen').forEach(el => el.classList.remove('active'));
+                $('tool' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
+            }
+
+            // Saved users
+            function renderSaved() {
+                const list = $('savedUsersList');
+                try {
+                    const users = JSON.parse(localStorage.getItem(STORAGE_SAVED)) || [];
+                    if (!users.length) { list.innerHTML = '<p class="text-muted" style="font-size:0.8rem;">No saved profiles.</p>'; return; }
+                    list.innerHTML = users.map(u => `<div class="saved-user-btn" onclick="loginUser('${u}')">${u}</div>`).join('');
+                } catch { list.innerHTML = ''; }
+            }
+
+            window.loginUser = function(fullName) {
+                currentUser = fullName;
+                $('topbarUser').textContent = 'Welcome, ' + currentUser + '!';
+                showScreen('dashboardScreen');
+                renderTools();
+            };
+
+            $('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const f = $('firstName').value.trim(), l =$('lastName').value.trim();
+                if (!f || !l) return;
+                const full = f + ' ' + l;
+                if (f.toUpperCase() === 'TEST') {
+                    pendingTest = full;
+                    $('modalNameDisplay').textContent = full;
+                    $('passwordModal').classList.add('show');
+                    return;
+                }
+                saveAndLogin(full);
+            });
+
+            function saveAndLogin(full) {
+                try {
+                    let users = JSON.parse(localStorage.getItem(STORAGE_SAVED)) || [];
+                    users = [full, ...users.filter(u => u !== full)].slice(0, 5);
+                    localStorage.setItem(STORAGE_SAVED, JSON.stringify(users));
+                } catch {}
+                loginUser(full);
+            }
+
+            $('passwordSubmit').addEventListener('click', () => {
+                if ($('passwordInput').value.trim() === TEACHER_PASSWORD) {$('passwordModal').classList.remove('show');
+                    if (pendingTest) saveAndLogin(pendingTest);
+                } else { $('passwordError').style.display = 'block'; }
+            });
+            $('passwordCancel').addEventListener('click', () =>$('passwordModal').classList.remove('show'));
+
+            $('logoutBtn').addEventListener('click', () => {
+                currentUser = null;
+                showScreen('loginScreen');
+                renderSaved();
+            });
+
+            function renderTools() {
+                $('toolsGrid').innerHTML = TOOLS.map(t => `
+                    <div class="tool-card" onclick="openTool('${t.id}')">
+                        <div class="icon">${t.icon}</div>
+                        <h3>${t.title}</h3>
+                        <p>${t.desc}</p>
+                        <span class="badge">Open Tool</span>
+                    </div>
+                `).join('');
+            }
+
+            window.openTool = function(id) {
+                showTool(id);
+                if (id === 'draw') initDraw();
+                if (id === 'attendance') renderAttendance();
+            };
+
+            document.querySelectorAll('.back-btn').forEach(b => b.addEventListener('click', () => showScreen('dashboardScreen')));
+
+            /* ================================================================
+               ADOBE SMARTBOARD PDF READER ENGINE
+            ================================================================ *///
+            let pdfDoc = null, pageNum = 1, pdfScale = 1.3, rendering = false;
+            const canvas = $('adobeCanvas'), ctx = canvas.getContext('2d');
+
+            $('adobePdfUpload').addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                try {
+                    const data = new Uint8Array(await file.arrayBuffer());
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                    pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+                    pageNum = 1;
+                    $('adobePageTotal').textContent = '/ ' + pdfDoc.numPages;
+                    $('adobePageInput').max = pdfDoc.numPages;
+                    canvas.style.display = 'block';
+                    $('adobePlaceholder').style.display = 'none';$('adobePrev').disabled = false;
+                    $('adobeNext').disabled = false;
+                    renderPage();
+                    renderThumbnails();
+                } catch (err) { alert('Error loading PDF: ' + err.message); }
+            });
+
+            async function renderPage() {
+                if (!pdfDoc || rendering) return;
+                rendering = true;
+                const page = await pdfDoc.getPage(pageNum);
+                const vp = page.getViewport({ scale: pdfScale });
+                canvas.width = vp.width;
+                canvas.height = vp.height;
+                await page.render({ canvasContext: ctx, viewport: vp }).promise;
+                $('adobePageInput').value = pageNum;
+                $('adobeZoomLabel').textContent = Math.round(pdfScale * 100) + '%';
+                updateActiveThumbnail();
+                rendering = false;
+            }
+
+            async function renderThumbnails() {
+                const list = $('adobeThumbnailsList');
+                list.innerHTML = '';
+                for (let i = 1; i <= pdfDoc.numPages; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const vp = page.getViewport({ scale: 0.2 });
+                    const div = document.createElement('div');
+                    div.className = 'thumb-item' + (i === pageNum ? ' active' : '');
+                    div.dataset.page = i;
+                    const c = document.createElement('canvas');
+                    c.width = vp.width; c.height = vp.height;
+                    await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+                    div.appendChild(c);
+                    div.innerHTML += `<div class="thumb-label">Page ${i}</div>`;
+                    div.addEventListener('click', () => { pageNum = i; renderPage(); });
+                    list.appendChild(div);
+                }
+            }
+
+            function updateActiveThumbnail() {
+                document.querySelectorAll('.thumb-item').forEach((el, idx) => {
+                    el.classList.toggle('active', idx + 1 === pageNum);
+                });
+            }
+
+            $('adobePrev').addEventListener('click', () => { if (pdfDoc && pageNum > 1) { pageNum--; renderPage(); } });
+            $('adobeNext').addEventListener('click', () => { if (pdfDoc && pageNum < pdfDoc.numPages) { pageNum++; renderPage(); } });$('adobePageInput').addEventListener('change', () => {
+                if (!pdfDoc) return;
+                let v = parseInt($('adobePageInput').value);
+                if (!isNaN(v)) { pageNum = Math.max(1, Math.min(v, pdfDoc.numPages)); renderPage(); }
+            });
+            $('adobeZoomIn').addEventListener('click', () => { if (pdfDoc && pdfScale < 3.0) { pdfScale += 0.25; renderPage(); } });
+            $('adobeZoomOut').addEventListener('click', () => { if (pdfDoc && pdfScale > 0.6) { pdfScale -= 0.25; renderPage(); } });$('adobeToggleSidebar').addEventListener('click', () => $('adobeSidebar').classList.toggle('collapsed'));$('adobeFullscreen').addEventListener('click', () => {
+                const wrap = $('adobeViewerCanvasWrap');
+                if (!document.fullscreenElement) wrap.requestFullscreen?.();
+                else document.exitFullscreen?.();
+            });
+
+            /* ================================================================
+               DRAWING & OTHER TOOLS
+            ================================================================ */
+            let drawInit = false;
+            function initDraw() {
+                if (drawInit) return;
+                drawInit = true;
+                const c = $('drawCanvas'), dc = c.getContext('2d');
+                c.width = c.parentElement.clientWidth || 900;
+                c.height = c.width * 9 / 16;
+                dc.fillStyle = '#111722'; dc.fillRect(0, 0, c.width, c.height);
+
+                const getPos = e => {
+                    const r = c.getBoundingClientRect();
+                    return { x: (e.clientX || e.touches?.[0]?.clientX || 0) - r.left, y: (e.clientY || e.touches?.[0]?.clientY || 0) - r.top };
+                };
+                c.addEventListener('mousedown', e => { isDrawing = true; const p = getPos(e); dc.beginPath(); dc.moveTo(p.x, p.y); });
+                c.addEventListener('mousemove', e => {
+                    if (!isDrawing) return;
+                    const p = getPos(e);
+                    dc.strokeStyle = eraserOn ? '#111722' : $('drawColor').value;
+                    dc.lineWidth = eraserOn ? 40 : parseInt($('drawSize').value);
+                    dc.lineCap = 'round'; dc.lineTo(p.x, p.y); dc.stroke(); dc.beginPath(); dc.moveTo(p.x, p.y);
+                });
+                window.addEventListener('mouseup', () => isDrawing = false);
+            }
+            $('drawSize').addEventListener('input', () => $('drawSizeLabel').textContent =$('drawSize').value);
+            $('drawEraser').addEventListener('click', () => { eraserOn = !eraserOn; $('drawEraser').style.background = eraserOn ? 'var(--accent)' : ''; });
+            $('drawClear').addEventListener('click', () => { const c =$('drawCanvas'), dc = c.getContext('2d'); dc.fillStyle = '#111722'; dc.fillRect(0,0,c.width,c.height); });
+
+            // Notepad
+            $('notepadSave').addEventListener('click', () => {
+                localStorage.setItem('thebes_notes_' + currentUser, $('notepadArea').value);$('notepadStatus').textContent = '✅ Saved successfully!';
+                setTimeout(() => $('notepadStatus').textContent = '', 2500);
+            });
+            // Timer
+            function fmtTime(s) { return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); }
+            $('timerStart').addEventListener('click', () => {
+                if (timerRunning) return;
+                timerRunning = true;
+                timerInt = setInterval(() => {
+                    if (timerTarget > 0 && timerSecs <= 0) { clearInterval(timerInt); timerRunning = false; alert('⏰ Time is up!'); return; }
+                    timerSecs += (timerTarget > 0 ? -1 : 1);
+                    $('timerDisplay').textContent = fmtTime(timerSecs);                 }, 1000);             });$('timerPause').addEventListener('click', () => { clearInterval(timerInt); timerRunning = false; });
+            $('timerReset').addEventListener('click', () => { clearInterval(timerInt); timerRunning = false; timerSecs = 0; timerTarget = 0; $('timerDisplay').textContent = '00:00'; });
+            document.querySelectorAll('.timer-presets button').forEach(b => b.addEventListener('click', () => {
+                timerSecs = parseInt(b.dataset.minutes) * 60; timerTarget = timerSecs; $('timerDisplay').textContent = fmtTime(timerSecs);
+            }));
+
+            // Picker
+            $('pickNameBtn').addEventListener('click', () => {
+                const names = $('studentNamesInput').value.split('\n').map(n => n.trim()).filter(Boolean);
+                if (!names.length) { alert('Enter student names first!'); return; }
+                $('rollNameDisplay').textContent = names[Math.floor(Math.random() * names.length)];
+            });
+
+            // Grades & Attendance
+            $('addGradeRow').addEventListener('click', () => {
+                const row = document.createElement('div');
+                row.className = 'grade-row';
+                row.innerHTML = `<input type="text" placeholder="Assignment" class="grade-name" /><input type="number" placeholder="Score" class="grade-score" /><input type="number" placeholder="Out of" class="grade-max" value="100" /><button class="adobe-smart-btn" style="background:#e74c3c;color:#fff;" onclick="this.parentElement.remove()">✕</button>`;
+                $('gradeRows').appendChild(row);
+            });
+            $('calcGrades').addEventListener('click', () => {
+                let earned = 0, max = 0;
+                document.querySelectorAll('.grade-row').forEach(r => {
+                    earned += parseFloat(r.querySelector('.grade-score').value) || 0;
+                    max += parseFloat(r.querySelector('.grade-max').value) || 100;
+                });
+                $('gradeResult').textContent = max ? (earned / max * 100).toFixed(1) + '% (' + earned + '/' + max + ')' : '— %';
+            });
+
+            function renderAttendance() {
+                try {
+                    const data = JSON.parse(localStorage.getItem('att_' + currentUser)) || [];
+                    $('attendanceList').innerHTML = data.map((s, i) => `<div class="attendance-item"><span>${s.name}</span><input type="checkbox" ${s.present?'checked':''} onchange="toggleAtt(${i}, this.checked)" /></div>`).join('');
+                    $('attendanceSummary').textContent = 'Present: ' + data.filter(s => s.present).length + ' / ' + data.length;
+                } catch {}
+            }
+            $('addAttendanceStudent').addEventListener('click', () => {
+                const name = $('attendanceNameInput').value.trim();
+                if (!name) return;
+                try {
+                    let data = JSON.parse(localStorage.getItem('att_' + currentUser)) || [];
+                    data.push({ name, present: false });
+                    localStorage.setItem('att_' + currentUser, JSON.stringify(data));
+                    $('attendanceNameInput').value = '';
+                    renderAttendance();
+                } catch {}
+            });
+            window.toggleAtt = function(idx, val) {
+                let data = JSON.parse(localStorage.getItem('att_' + currentUser)) || [];
+                data[idx].present = val;
+                localStorage.setItem('att_' + currentUser, JSON.stringify(data));
+                $('attendanceSummary').textContent = 'Present: ' + data.filter(s => s.present).length + ' / ' + data.length;
+            };
+
+            // Init check
+            if (localStorage.getItem(STORAGE_CURRENT)) {
+                loginUser(localStorage.getItem(STORAGE_CURRENT));
+            } else { renderSaved(); }
+        })();
+    </script>
+</body>
+</html>
