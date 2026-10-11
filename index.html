@@ -37,6 +37,7 @@
             --radius: 16px;
             --radius-sm: 10px;
             --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         html {
             scroll-behavior: smooth;
@@ -94,13 +95,37 @@
             opacity: 0.15;
             animation: orbFloat 20s ease-in-out infinite;
         }
-        .bg-animated .orb:nth-child(1) { width: 500px; height: 500px; background: var(--accent); top: -10%; left: -5%; }
-        .bg-animated .orb:nth-child(2) { width: 400px; height: 400px; background: #2563eb; bottom: -10%; right: -5%; animation-delay: -7s; }
-        .bg-animated .orb:nth-child(3) { width: 350px; height: 350px; background: #8b5cf6; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -14s; }
+        .bg-animated .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+            top: -10%;
+            left: -5%;
+            animation-delay: 0s;
+        }
+        .bg-animated .orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: #2563eb;
+            bottom: -10%;
+            right: -5%;
+            animation-delay: -7s;
+        }
+        .bg-animated .orb:nth-child(3) {
+            width: 350px;
+            height: 350px;
+            background: #8b5cf6;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
 
         @keyframes orbFloat {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(40px, -30px) scale(1.05); }
+            25% { transform: translate(60px, -40px) scale(1.1); }
+            50% { transform: translate(-30px, 60px) scale(0.95); }
+            75% { transform: translate(40px, 30px) scale(1.05); }
         }
 
         /* ===== SCREENS ===== */
@@ -111,47 +136,103 @@
         }
         .screen.active, .tool-screen.active {
             display: flex;
-            animation: fadeSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(12px); }
+            from { opacity: 0; transform: translateY(16px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
 
-        /* ===== LOGIN SCREEN ===== */
+        /* ===== LOGIN SCREEN (ORIGINAL EXACT STYLING WITH GLOWING SHIMMER) ===== */
         #loginScreen {
             align-items: center;
             justify-content: center;
             padding: 20px;
+            background: var(--bg);
         }
         .login-container {
             background: var(--card);
             backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--card-border);
             border-radius: 24px;
             padding: 50px 44px 40px;
             width: 100%;
             max-width: 420px;
             box-shadow: var(--shadow), var(--shadow-glow);
+            animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--primary-glow), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
         }
         .login-logo {
             font-family: 'Playfair Display', serif;
             font-size: 3rem;
             font-weight: 800;
             color: #fff;
+            letter-spacing: -1px;
             text-align: center;
             margin-bottom: 2px;
         }
-        .login-logo span { color: var(--accent); }
+        .login-logo span {
+            color: var(--accent);
+        }
         .login-sub {
             color: var(--text-light);
             margin: 0 0 32px;
             font-size: 0.95rem;
             text-align: center;
+            letter-spacing: 0.3px;
         }
-        .login-form { display: flex; flex-direction: column; gap: 14px; }
-        .login-form .name-row { display: flex; gap: 10px; }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .login-form input {
+            width: 100%;
+        }
+        .login-form .name-row {
+            display: flex;
+            gap: 10px;
+        }
+        .login-form .name-row input {
+            flex: 1;
+            animation: slideUp 0.5s ease both;
+        }
+        .login-form .name-row input:first-child {
+            animation-delay: 0.1s;
+        }
+        .login-form .name-row input:last-child {
+            animation-delay: 0.2s;
+        }
         .btn-primary {
             background: linear-gradient(135deg, var(--accent), #d4942e);
             color: #0f1b2d;
@@ -159,45 +240,91 @@
             border-radius: var(--radius-sm);
             font-weight: 700;
             font-size: 1rem;
+            letter-spacing: 0.3px;
             box-shadow: 0 4px 20px var(--accent-glow);
+            transition: var(--transition);
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 30px var(--accent-glow); }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px var(--accent-glow);
+        }
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
 
         .saved-users {
             margin-top: 28px;
             padding-top: 24px;
             border-top: 1px solid var(--card-border);
+            animation: slideUp 0.5s 0.3s ease both;
         }
-        .saved-users h4 { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .saved-users-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .saved-users h4 {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .saved-users-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
         .saved-user-btn {
             background: rgba(255, 255, 255, 0.06);
             color: var(--text-light);
             padding: 8px 18px;
             border-radius: 20px;
             font-size: 0.82rem;
+            font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: var(--transition);
         }
-        .saved-user-btn:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--accent); color: #fff; }
-        .saved-user-btn .remove-btn { color: var(--text-muted); background: none; font-size: 0.75rem; cursor: pointer; }
+        .saved-user-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--accent);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .saved-user-btn .remove-btn {
+            color: var(--text-muted);
+            font-weight: 700;
+            background: none;
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 0 2px;
+            line-height: 1;
+            transition: var(--transition);
+        }
+        .saved-user-btn .remove-btn:hover {
+            color: #ef4444;
+        }
 
-        /* ===== MODAL ===== */
+        /* ===== PASSWORD MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             align-items: center;
             justify-content: center;
             z-index: 999;
             padding: 20px;
         }
-        .modal-overlay.show { display: flex; }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-overlay.show .modal-box {
+            animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
         .modal-box {
             background: var(--bg-alt);
             border: 1px solid var(--card-border);
@@ -208,58 +335,217 @@
             text-align: center;
             box-shadow: var(--shadow);
         }
-        .modal-box h3 { margin-bottom: 6px; font-size: 1.3rem; }
-        .modal-box p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 22px; }
-        .modal-box input { width: 100%; margin-bottom: 14px; }
-        .modal-error { color: #ef4444; font-size: 0.85rem; margin-top: 8px; display: none; }
+        .modal-box h3 {
+            margin-bottom: 6px;
+            font-size: 1.3rem;
+        }
+        .modal-box p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 22px;
+        }
+        .modal-box input {
+            width: 100%;
+            margin-bottom: 14px;
+        }
+        .modal-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
 
         /* ===== DASHBOARD ===== */
-        #dashboardScreen { flex-direction: column; }
+        #dashboardScreen {
+            flex-direction: column;
+            background: var(--bg);
+        }
         .topbar {
             background: rgba(15, 27, 45, 0.85);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding: 16px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
-        .topbar-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: #fff; }
-        .topbar-logo span { color: var(--accent); }
-        .topbar-user { font-size: 0.88rem; color: var(--text-light); padding: 6px 14px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; }
-        .btn-logout { background: rgba(255, 255, 255, 0.06); color: var(--text-light); padding: 8px 20px; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.06); }
-        .btn-logout:hover { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .topbar-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .topbar-logo span {
+            color: var(--accent);
+        }
+        .topbar-user {
+            font-size: 0.88rem;
+            color: var(--text-light);
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-light);
+            padding: 8px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        .main-content {
+            flex: 1;
+            padding: 40px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            animation: fadeSlideIn 0.5s ease;
+        }
+        .main-content h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .main-content .subtitle {
+            color: var(--text-light);
+            margin-bottom: 36px;
+            font-size: 0.95rem;
+        }
 
-        .main-content { flex: 1; padding: 40px 32px; max-width: 1200px; margin: 0 auto; width: 100%; }
-        .main-content h1 { font-size: 2rem; font-weight: 800; margin-bottom: 4px; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .main-content .subtitle { color: var(--text-light); margin-bottom: 36px; font-size: 0.95rem; }
-
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        /* ===== TOOL CARDS GRID ===== */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
         .tool-card {
             background: var(--card);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
             padding: 28px 24px 24px;
             box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: var(--radius);
+            padding: 1px;
+            background: conic-gradient(from 0deg, transparent, var(--accent-glow), transparent, var(--accent-glow), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            animation: rotate 4s linear infinite;
+        }
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+        .tool-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        .tool-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: var(--shadow), 0 0 50px var(--accent-glow);
+            background: var(--card-hover);
+        }
+        .tool-card .icon {
+            font-size: 2.6rem;
+            margin-bottom: 14px;
+            display: inline-block;
+            animation: float 4s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        .tool-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+        .tool-card p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+        .tool-card .badge {
+            display: inline-block;
+            margin-top: 14px;
+            background: linear-gradient(135deg, var(--accent), #d4942e);
+            color: #0f1b2d;
+            font-size: 0.68rem;
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
             transition: var(--transition);
         }
-        .tool-card:hover { transform: translateY(-6px) scale(1.02); border-color: var(--accent); box-shadow: var(--shadow), 0 0 40px var(--accent-glow); background: var(--card-hover); }
-        .tool-card .icon { font-size: 2.6rem; margin-bottom: 14px; display: inline-block; }
-        .tool-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
-        .tool-card p { font-size: 0.85rem; color: var(--text-light); }
-        .tool-card .badge { display: inline-block; margin-top: 14px; background: linear-gradient(135deg, var(--accent), #d4942e); color: #0f1b2d; font-size: 0.68rem; padding: 4px 14px; border-radius: 12px; font-weight: 700; text-transform: uppercase; }
+        .tool-card:hover .badge {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
 
         /* ===== TOOL SCREENS ===== */
-        .tool-screen { flex-direction: column; min-height: 100vh; background: var(--bg); }
+        .tool-screen {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg);
+        }
+        .tool-screen.active {
+            display: flex;
+        }
         .tool-header {
             background: rgba(15, 27, 45, 0.85);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding: 14px 32px;
             display: flex;
@@ -269,16 +555,42 @@
             top: 0;
             z-index: 100;
         }
-        .tool-header .back-btn { background: rgba(255, 255, 255, 0.06); color: var(--text-light); padding: 8px 18px; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.06); }
-        .tool-header h2 { font-size: 1.2rem; font-weight: 700; color: #fff; }
-        .tool-body { flex: 1; padding: 24px 32px; max-width: 1500px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
+        .tool-header .back-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-light);
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: var(--transition);
+        }
+        .tool-header .back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            transform: translateX(-2px);
+        }
+        .tool-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .tool-body {
+            flex: 1;
+            padding: 24px 32px;
+            max-width: 1500px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
         /* ================================================================
-           ADOBE SMARTBOARD PDF READER (PRO UI/UX)
+           ADOBE SMARTBOARD PDF READER (PRO UI/UX WITH THUMBNAILS)
         ================================================================ */
         .adobe-workspace {
             display: flex;
-            height: calc(100vh - 105px);
+            height: calc(100vh - 110px);
             background: #18202c;
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
@@ -286,8 +598,6 @@
             overflow: hidden;
             position: relative;
         }
-
-        /* Left Thumbnails Sidebar (Collapsible) */
         .adobe-sidebar {
             width: 240px;
             background: #111722;
@@ -331,7 +641,6 @@
         .thumb-item canvas { width: 100% !important; height: auto !important; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
         .thumb-label { font-size: 0.7rem; color: var(--text-light); margin-top: 4px; font-weight: 600; }
 
-        /* Main PDF Reader Viewport Area */
         .adobe-main-pane {
             flex: 1;
             display: flex;
@@ -339,8 +648,6 @@
             background: #121822;
             overflow: hidden;
         }
-
-        /* Smartboard Top Toolbar (Large touch targets) */
         .adobe-toolbar {
             background: #1a2332;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -352,8 +659,6 @@
             z-index: 10;
         }
         .adobe-toolbar-group { display: flex; align-items: center; gap: 10px; }
-        
-        /* Large Touch-friendly Smartboard Buttons */
         .adobe-smart-btn {
             background: rgba(255, 255, 255, 0.08);
             color: #fff;
@@ -365,11 +670,10 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            min-height: 44px; /* Optimal for smartboard touch */
+            min-height: 44px;
         }
         .adobe-smart-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); transform: translateY(-1px); }
         .adobe-smart-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
-        
         .adobe-page-input {
             width: 60px;
             height: 44px;
@@ -382,13 +686,10 @@
             font-weight: 700;
         }
         .adobe-page-total { color: var(--text-light); font-size: 0.95rem; font-weight: 500; margin-left: 4px; }
-        
         .adobe-file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; }
         .adobe-file-upload-wrapper input[type="file"] {
             position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
         }
-
-        /* Canvas Scroll Viewport */
         .adobe-viewer-canvas-wrap {
             flex: 1;
             background: #0a0e14;
@@ -417,34 +718,24 @@
         }
         .adobe-placeholder .big-icon { font-size: 5rem; margin-bottom: 20px; opacity: 0.4; }
 
-        /* ===== OTHER TOOLS (Draw, Notepad, Timer, Picker, Grades, Attendance, Info) ===== */
-        .draw-controls, .grade-calc, .name-picker-area { /* Standard tool styles kept robust */ }
+        /* ===== OTHER TOOLS STYLES ===== */
         .draw-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 18px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px 22px; }
-        .draw-controls input[type="color"] { border: none; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; background: none; }
-        .draw-controls input[type="range"] { width: 100px; }
         .draw-canvas-wrap { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); overflow: hidden; }
         .draw-canvas-wrap canvas { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; cursor: crosshair; touch-action: none; }
-
         .notepad-area { width: 100%; min-height: 360px; padding: 20px; border-radius: var(--radius); border: 1.5px solid var(--card-border); background: rgba(255,255,255,0.03); font-size: 1rem; color: #fff; resize: vertical; }
-        
         .timer-display { font-size: 6rem; font-weight: 800; text-align: center; color: #fff; font-variant-numeric: tabular-nums; margin: 30px 0 20px; text-shadow: 0 0 40px var(--accent-glow); }
         .timer-controls, .timer-presets { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-        .timer-controls button, .timer-presets button { padding: 12px 28px; border-radius: var(--radius-sm); font-weight: 700; }
-        
         .name-picker-area { display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .name-picker-area textarea { width: 100%; max-width: 500px; min-height: 100px; padding: 16px; color: #fff; }
-        .roll-machine { width: 100%; max-width: 500px; background: linear-gradient(180deg, #1a1a2e, #0f0f23); border: 2px solid var(--accent); border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 0 40px var(--accent-glow); position: relative; }
+        .roll-machine { width: 100%; max-width: 500px; background: linear-gradient(180deg, #1a1a2e, #0f0f23); border: 2px solid var(--accent); border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 0 40px var(--accent-glow); }
         .roll-viewport { background: rgba(0,0,0,0.4); border: 2px solid rgba(240,184,65,0.2); border-radius: 14px; padding: 10px; min-height: 90px; display: flex; align-items: center; justify-content: center; }
         .roll-name { font-size: 2.6rem; font-weight: 800; color: var(--accent); }
         .spin-btn { background: linear-gradient(135deg, var(--accent), #d4942e); color: #0f1b2d; padding: 16px 48px; border-radius: 14px; font-weight: 800; font-size: 1.15rem; box-shadow: 0 4px 24px var(--accent-glow); cursor: pointer; }
-
         .grade-calc { max-width: 520px; }
         .grade-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
         .grade-result { font-size: 1.6rem; font-weight: 700; color: var(--accent); text-align: center; margin: 20px 0; padding: 20px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); }
-
         .attendance-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--card-border); padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 8px; }
         .attendance-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); cursor: pointer; }
-
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .info-card { background: var(--card); border: 1px solid var(--card-border); padding: 24px; border-radius: var(--radius); }
         .info-card h3 { color: var(--accent); margin-bottom: 8px; }
@@ -468,7 +759,7 @@
     <div id="loginScreen" class="screen active">
         <div class="login-container">
             <div class="login-logo">Thebes<span>.</span></div>
-            <p class="login-sub">Language School — Smartboard Teacher Portal</p>
+            <p class="login-sub">Language School — Teacher Portal</p>
             <form id="loginForm" class="login-form" autocomplete="off">
                 <div class="name-row">
                     <input type="text" id="firstName" placeholder="First Name" required />
@@ -508,30 +799,26 @@
         </div>
         <div class="main-content">
             <h1>📚 Teacher Dashboard</h1>
-            <p class="subtitle">Optimized for smartboard teaching & large display rooms.</p>
+            <p class="subtitle">Everything you need for your classroom.</p>
             <div class="tools-grid" id="toolsGrid"></div>
         </div>
     </div>
 
-    <!-- TOOL: ADOBE SMARTBOARD PDF READER -->
+    <!-- TOOL: ADOBE-STYLE SMARTBOARD PDF READER -->
     <div class="tool-screen" id="toolPdf">
         <div class="tool-header">
-            <button class="back-btn" data-tool="pdf">← Back to Dashboard</button>
+            <button class="back-btn" data-tool="pdf">← Back</button>
             <h2>📄 Adobe-Style Smartboard PDF Reader</h2>
         </div>
         <div class="tool-body">
             <div class="adobe-workspace">
-                <!-- Sidebar Thumbnails Pane -->
                 <div class="adobe-sidebar" id="adobeSidebar">
                     <div class="adobe-sidebar-header">Pages Overview</div>
                     <div class="adobe-thumbnails-list" id="adobeThumbnailsList">
                         <p class="text-muted" style="font-size: 0.75rem; text-align: center; padding: 20px;">Upload a PDF to view thumbnails</p>
                     </div>
                 </div>
-
-                <!-- Main Viewport Pane -->
                 <div class="adobe-main-pane">
-                    <!-- Smartboard Top Toolbar -->
                     <div class="adobe-toolbar">
                         <div class="adobe-toolbar-group">
                             <button class="adobe-smart-btn" id="adobeToggleSidebar" title="Toggle Sidebar">📑 Panes</button>
@@ -555,12 +842,10 @@
                             <button class="adobe-smart-btn" id="adobeFullscreen" title="Fullscreen Presentation">⛶ Fullscreen</button>
                         </div>
                     </div>
-
-                    <!-- PDF Render Body -->
                     <div class="adobe-viewer-canvas-wrap" id="adobeViewerCanvasWrap">
                         <div class="adobe-placeholder" id="adobePlaceholder">
                             <div class="big-icon">📚</div>
-                            <p>No PDF open. Tap <strong>Open PDF</strong> to load a document for the classroom display.</p>
+                            <p>No PDF open. Tap <strong>Open PDF</strong> to load a document.</p>
                         </div>
                         <canvas id="adobeCanvas" class="adobe-canvas-shadow" style="display:none;"></canvas>
                     </div>
@@ -573,18 +858,18 @@
     <div class="tool-screen" id="toolDraw">
         <div class="tool-header">
             <button class="back-btn" data-tool="draw">← Back</button>
-            <h2>🎨 Smartboard Whiteboard & Drawing</h2>
+            <h2>🎨 Drawing Board</h2>
         </div>
         <div class="tool-body">
             <div class="draw-controls">
                 <label>Color</label>
-                <input type="color" id="drawColor" value="#f0b841" />
+                <input type="color" id="drawColor" value="#1a3a5c" />
                 <label>Size</label>
-                <input type="range" id="drawSize" min="2" max="30" value="6" />
-                <span id="drawSizeLabel">6</span>
+                <input type="range" id="drawSize" min="1" max="20" value="3" />
+                <span id="drawSizeLabel">3</span>
                 <button class="adobe-smart-btn" id="drawEraser">Eraser</button>
-                <button class="adobe-smart-btn" id="drawClear" style="background: rgba(239, 68, 68, 0.2); color: #efca44;">Clear Canvas</button>
-                <button class="adobe-smart-btn" id="drawSave">💾 Save Drawing</button>
+                <button class="adobe-smart-btn" id="drawClear" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Clear</button>
+                <button class="adobe-smart-btn" id="drawSave">💾 Save</button>
             </div>
             <div class="draw-canvas-wrap">
                 <canvas id="drawCanvas"></canvas>
@@ -599,8 +884,8 @@
             <h2>📝 Teacher's Notepad</h2>
         </div>
         <div class="tool-body">
-            <textarea class="notepad-area" id="notepadArea" placeholder="Write lesson plans or notes here…"></textarea>
-            <div style="margin-top: 16px; display: flex; gap: 12px;">
+            <textarea class="notepad-area" id="notepadArea" placeholder="Write your notes here…"></textarea>
+            <div class="notepad-actions" style="margin-top: 16px; display: flex; gap: 12px;">
                 <button class="btn-primary" id="notepadSave">💾 Save Notes</button>
                 <button class="btn-logout" id="notepadClear" style="background:#e74c3c;color:#fff;">Clear</button>
             </div>
@@ -612,7 +897,7 @@
     <div class="tool-screen" id="toolTimer">
         <div class="tool-header">
             <button class="back-btn" data-tool="timer">← Back</button>
-            <h2>⏱ Class Countdown Timer</h2>
+            <h2>⏱ Class Timer</h2>
         </div>
         <div class="tool-body" style="align-items: center; justify-content: center;">
             <div class="timer-display" id="timerDisplay">00:00</div>
@@ -621,8 +906,9 @@
                 <button class="adobe-smart-btn" id="timerPause">⏸ Pause</button>
                 <button class="adobe-smart-btn" id="timerReset" style="color: #ef4444;">⟳ Reset</button>
             </div>
-            <div class="timer-presets" style="margin-top: 30px;">
-                <button class="adobe-smart-btn" data-minutes="2">2 min</button>
+            <div class="timer-presets" style="margin-top: 22px;">
+                <button class="adobe-smart-btn" data-minutes="1">1 min</button>
+                <button class="adobe-smart-btn" data-minutes="3">3 min</button>
                 <button class="adobe-smart-btn" data-minutes="5">5 min</button>
                 <button class="adobe-smart-btn" data-minutes="10">10 min</button>
                 <button class="adobe-smart-btn" data-minutes="15">15 min</button>
@@ -635,19 +921,19 @@
     <div class="tool-screen" id="toolPicker">
         <div class="tool-header">
             <button class="back-btn" data-tool="picker">← Back</button>
-            <h2>🎲 Random Student Picker</h2>
+            <h2>🎲 Random Name Picker</h2>
         </div>
         <div class="tool-body">
             <div class="name-picker-area">
                 <textarea id="studentNamesInput" placeholder="Enter student names, one per line:&#10;Ahmed&#10;Mariam&#10;Youssef"></textarea>
                 <div class="roll-machine">
-                    <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 8px;">✦ Selected Student ✦</div>
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 8px;">✦ Name Roll ✦</div>
                     <div class="roll-viewport">
                         <div class="roll-name" id="rollNameDisplay">—</div>
                     </div>
                 </div>
-                <button class="spin-btn" id="pickNameBtn">🎲 PICK RANDOM STUDENT</button>
-                <p class="text-muted text-center" id="pickerStatus">Ready to pick!</p>
+                <button class="spin-btn" id="pickNameBtn">🎲 SPIN THE WHEEL!</button>
+                <p class="text-muted text-center" id="pickerStatus">Enter names above and click to roll!</p>
             </div>
         </div>
     </div>
@@ -663,14 +949,14 @@
                 <div id="gradeRows">
                     <div class="grade-row">
                         <input type="text" placeholder="Assignment name" class="grade-name" />
-                        <input type="number" placeholder="Score" class="grade-score" min="0" />
+                        <input type="number" placeholder="Grade" class="grade-score" min="0" max="100" />
                         <input type="number" placeholder="Out of" class="grade-max" min="1" value="100" />
                         <button class="adobe-smart-btn" style="background:#e74c3c;color:#fff;" onclick="this.parentElement.remove()">✕</button>
                     </div>
                 </div>
                 <button class="btn-primary" id="addGradeRow" style="margin-bottom:12px;">+ Add Assignment</button>
                 <div class="grade-result" id="gradeResult">— %</div>
-                <button class="btn-primary" id="calcGrades">Calculate Average</button>
+                <button class="btn-primary" id="calcGrades">Calculate</button>
             </div>
         </div>
     </div>
@@ -695,13 +981,13 @@
     <div class="tool-screen" id="toolInfo">
         <div class="tool-header">
             <button class="back-btn" data-tool="info">← Back</button>
-            <h2>🏫 School Information</h2>
+            <h2>🏫 Thebes Language School</h2>
         </div>
         <div class="tool-body" style="max-width: 900px;">
             <div class="info-grid">
                 <div class="info-card">
                     <h3>📍 Address</h3>
-                    <p>Thebes Language School<br />Cairo, Egypt</p>
+                    <p>Thebes Language School<br />123 Education Street<br />Cairo, Egypt</p>
                 </div>
                 <div class="info-card">
                     <h3>⏰ School Hours</h3>
@@ -743,12 +1029,11 @@
                 $('tool' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
             }
 
-            // Saved users
             function renderSaved() {
                 const list = $('savedUsersList');
                 try {
                     const users = JSON.parse(localStorage.getItem(STORAGE_SAVED)) || [];
-                    if (!users.length) { list.innerHTML = '<p class="text-muted" style="font-size:0.8rem;">No saved profiles.</p>'; return; }
+                    if (!users.length) { list.innerHTML = '<p class="text-muted" style="font-size:0.8rem;">No saved users.</p>'; return; }
                     list.innerHTML = users.map(u => `<div class="saved-user-btn" onclick="loginUser('${u}')">${u}</div>`).join('');
                 } catch { list.innerHTML = ''; }
             }
@@ -802,7 +1087,7 @@
                         <div class="icon">${t.icon}</div>
                         <h3>${t.title}</h3>
                         <p>${t.desc}</p>
-                        <span class="badge">Open Tool</span>
+                        <span class="badge">Open</span>
                     </div>
                 `).join('');
             }
@@ -815,9 +1100,7 @@
 
             document.querySelectorAll('.back-btn').forEach(b => b.addEventListener('click', () => showScreen('dashboardScreen')));
 
-            /* ================================================================
-               ADOBE SMARTBOARD PDF READER ENGINE
-            ================================================================ *///
+            /* ================= PDF READER ENGINE ================= */
             let pdfDoc = null, pageNum = 1, pdfScale = 1.3, rendering = false;
             const canvas = $('adobeCanvas'), ctx = canvas.getContext('2d');
 
@@ -891,9 +1174,7 @@
                 else document.exitFullscreen?.();
             });
 
-            /* ================================================================
-               DRAWING & OTHER TOOLS
-            ================================================================ */
+            /* ================= OTHER TOOLS ================= */
             let drawInit = false;
             function initDraw() {
                 if (drawInit) return;
@@ -901,7 +1182,7 @@
                 const c = $('drawCanvas'), dc = c.getContext('2d');
                 c.width = c.parentElement.clientWidth || 900;
                 c.height = c.width * 9 / 16;
-                dc.fillStyle = '#111722'; dc.fillRect(0, 0, c.width, c.height);
+                dc.fillStyle = '#ffffff'; dc.fillRect(0, 0, c.width, c.height);
 
                 const getPos = e => {
                     const r = c.getBoundingClientRect();
@@ -911,7 +1192,7 @@
                 c.addEventListener('mousemove', e => {
                     if (!isDrawing) return;
                     const p = getPos(e);
-                    dc.strokeStyle = eraserOn ? '#111722' : $('drawColor').value;
+                    dc.strokeStyle = eraserOn ? '#ffffff' : $('drawColor').value;
                     dc.lineWidth = eraserOn ? 40 : parseInt($('drawSize').value);
                     dc.lineCap = 'round'; dc.lineTo(p.x, p.y); dc.stroke(); dc.beginPath(); dc.moveTo(p.x, p.y);
                 });
@@ -919,14 +1200,13 @@
             }
             $('drawSize').addEventListener('input', () => $('drawSizeLabel').textContent =$('drawSize').value);
             $('drawEraser').addEventListener('click', () => { eraserOn = !eraserOn; $('drawEraser').style.background = eraserOn ? 'var(--accent)' : ''; });
-            $('drawClear').addEventListener('click', () => { const c =$('drawCanvas'), dc = c.getContext('2d'); dc.fillStyle = '#111722'; dc.fillRect(0,0,c.width,c.height); });
+            $('drawClear').addEventListener('click', () => { const c =$('drawCanvas'), dc = c.getContext('2d'); dc.fillStyle = '#ffffff'; dc.fillRect(0,0,c.width,c.height); });
 
-            // Notepad
             $('notepadSave').addEventListener('click', () => {
-                localStorage.setItem('thebes_notes_' + currentUser, $('notepadArea').value);$('notepadStatus').textContent = '✅ Saved successfully!';
+                localStorage.setItem('thebes_notepad_' + currentUser, $('notepadArea').value);$('notepadStatus').textContent = '✅ Saved successfully!';
                 setTimeout(() => $('notepadStatus').textContent = '', 2500);
             });
-            // Timer
+
             function fmtTime(s) { return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); }
             $('timerStart').addEventListener('click', () => {
                 if (timerRunning) return;
@@ -940,14 +1220,12 @@
                 timerSecs = parseInt(b.dataset.minutes) * 60; timerTarget = timerSecs; $('timerDisplay').textContent = fmtTime(timerSecs);
             }));
 
-            // Picker
             $('pickNameBtn').addEventListener('click', () => {
                 const names = $('studentNamesInput').value.split('\n').map(n => n.trim()).filter(Boolean);
                 if (!names.length) { alert('Enter student names first!'); return; }
                 $('rollNameDisplay').textContent = names[Math.floor(Math.random() * names.length)];
             });
 
-            // Grades & Attendance
             $('addGradeRow').addEventListener('click', () => {
                 const row = document.createElement('div');
                 row.className = 'grade-row';
@@ -988,7 +1266,6 @@
                 $('attendanceSummary').textContent = 'Present: ' + data.filter(s => s.present).length + ' / ' + data.length;
             };
 
-            // Init check
             if (localStorage.getItem(STORAGE_CURRENT)) {
                 loginUser(localStorage.getItem(STORAGE_CURRENT));
             } else { renderSaved(); }
