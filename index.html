@@ -162,8 +162,30 @@
         .topbar-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: #fff; }
         .topbar-logo span { color: var(--accent); }
         .topbar-user { font-size: 0.88rem; color: var(--text-light); padding: 6px 14px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; }
+        .topbar-actions { display: flex; gap: 12px; align-items: center; position: relative; }
         .btn-logout { background: rgba(255, 255, 255, 0.06); color: var(--text-light); padding: 8px 20px; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.06); }
         .btn-logout:hover { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+        /* Notification Dropdown Styles */
+        .notif-btn {
+            background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #fff;
+            padding: 8px 14px; border-radius: var(--radius-sm); font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 6px; position: relative;
+        }
+        .notif-btn:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--accent); }
+        .notif-badge {
+            position: absolute; top: -6px; right: -6px; background: #ef4444; color: #fff;
+            font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 50%; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        .notif-dropdown {
+            display: none; position: absolute; right: 0; top: 50px; width: 340px;
+            background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: var(--radius);
+            padding: 16px; box-shadow: var(--shadow); z-index: 200; animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .notif-dropdown.show { display: block; }
+        .notif-header { font-size: 0.85rem; font-weight: 700; color: var(--accent); margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .notif-item { font-size: 0.8rem; color: var(--text-light); margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px; line-height: 1.4; }
+        .notif-item:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+        .notif-item strong { color: #fff; display: block; margin-bottom: 3px; }
 
         .main-content { flex: 1; padding: 40px 32px; max-width: 1200px; margin: 0 auto; width: 100%; }
         .main-content h1 { font-size: 2rem; font-weight: 800; margin-bottom: 4px; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -368,6 +390,26 @@
                 <div class="topbar-user" id="topbarUser">Welcome, Teacher!</div>
             </div>
             <div class="topbar-actions">
+                <!-- NOTIFICATION BUTTON & DROPDOWN -->
+                <div style="position: relative;">
+                    <button class="notif-btn" id="notifBtn">
+                        🔔 <span class="notif-badge">2</span>
+                    </button>
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span>Notifications</span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted); cursor: pointer;" onclick="clearNotifs()">Clear</span>
+                        </div>
+                        <div class="notif-item">
+                            <strong>🚨 BREAKING NEWS (Primary 5)</strong>
+                            Yahia Shop has been officially closed, but the business era did not end yet! Mohamed Hossam has made a new business: <strong>Shahn Shop</strong>. You can now buy views, followers, and subs on social media with money!!!!!!!
+                        </div>
+                        <div class="notif-item">
+                            <strong>📢 System Update</strong>
+                            Thebes Teacher Portal is fully updated and running smoothly with 40-player classroom gaming sessions and zero lag.
+                        </div>
+                    </div>
+                </div>
                 <button class="btn-logout" id="logoutBtn">Sign Out</button>
             </div>
         </div>
@@ -625,7 +667,21 @@
                 $('tool' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
             }
 
-            /* ================= CLASS GAMING SESSION LOGIC (NO TIERS) ================= */
+            // Notification dropdown toggle
+            $('notifBtn')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                $('notifDropdown').classList.toggle('show');
+            });
+            window.addEventListener('click', () => {
+                $('notifDropdown')?.classList.remove('show');
+            });
+            window.clearNotifs = function() {
+                const badge = document.querySelector('.notif-badge');
+                if (badge) badge.style.display = 'none';
+                $('notifDropdown').innerHTML = '<div style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:10px;">No new notifications</div>';
+            };
+
+            /* ================= CLASS GAMING SESSION LOGIC ================= */
             let currentGameMode = 'mythical';
             let isGameRolling = false;
 
